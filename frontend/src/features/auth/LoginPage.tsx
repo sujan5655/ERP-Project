@@ -51,7 +51,7 @@ const LoginPage = () => {
   return (
     <div>
       <h1>Login</h1>
-
+      <p> THis is login page </p>
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email</label>
