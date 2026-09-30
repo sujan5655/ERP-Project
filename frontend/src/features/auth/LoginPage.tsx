@@ -7,12 +7,9 @@ import { setCredentials } from "../authSlice";
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
   const [login, { isLoading }] = useLoginMutation();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [error, setError] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
