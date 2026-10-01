@@ -2,19 +2,24 @@ import { useEffect } from "react";
 
 import { useAppDispatch } from "../../app/hooks";
 import { useGetMeQuery } from "../authApi";
-import { setCredentials } from "../authSlice";
+import { setCredentials, setAuthInitialized } from "../authSlice";
 
 const AuthInitializer = () => {
   const dispatch = useAppDispatch();
 
   const accessToken = localStorage.getItem("accessToken");
+
   const refreshToken = localStorage.getItem("refreshToken");
 
-  const { data, isSuccess } = useGetMeQuery(undefined, {
+  const { data, isSuccess, isError, isLoading } = useGetMeQuery(undefined, {
     skip: !accessToken,
   });
 
   useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
     if (isSuccess && data && accessToken && refreshToken) {
       dispatch(
         setCredentials({
@@ -24,7 +29,23 @@ const AuthInitializer = () => {
         }),
       );
     }
-  }, [isSuccess, data, accessToken, refreshToken, dispatch]);
+
+    if (isError || !accessToken) {
+      dispatch(setAuthInitialized());
+    }
+
+    if (isSuccess) {
+      dispatch(setAuthInitialized());
+    }
+  }, [
+    isLoading,
+    isSuccess,
+    isError,
+    data,
+    accessToken,
+    refreshToken,
+    dispatch,
+  ]);
 
   return null;
 };
