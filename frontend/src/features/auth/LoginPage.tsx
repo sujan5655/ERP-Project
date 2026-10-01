@@ -22,6 +22,9 @@ const LoginPage = () => {
         email,
         password,
       }).unwrap();
+      localStorage.setItem("accessToken", response.tokens.access);
+
+      localStorage.setItem("refreshToken", response.tokens.refresh);
 
       dispatch(
         setCredentials({
@@ -33,7 +36,7 @@ const LoginPage = () => {
 
       console.log(response.message);
 
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       console.error(error);
 
