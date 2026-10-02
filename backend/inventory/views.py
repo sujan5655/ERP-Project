@@ -1,14 +1,15 @@
 from django.shortcuts import render
 
 # Create your views here.
+from jsonschema import ValidationError
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Inventory, StockMovement
-from .serializers import InventorySerializer, StockMovementSerializer
-from .services import create_stock_movement
+from .models import Inventory, StockMovement, StockTransfer
+from .serializers import InventorySerializer, StockMovementSerializer, StockTransferSerializer
+from .services import create_stock_movement, create_stock_transfer
 
 class InventoryListCreateAPIView(APIView):
 
@@ -393,4 +394,85 @@ class StockMovementDetailAPIView(APIView):
                 "message": "Stock movement deleted successfully.",
             },
             status=status.HTTP_200_OK,
+        )
+
+
+class StockTransferListCreateAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        transfers = StockTransfer.objects.select_related(
+            "product",
+            "from_warehouse",
+            "to_warehouse",
+        ).all().order_by("-created_at")
+
+        serializer = StockTransferSerializer(
+            transfers,
+            many=True,
+        )
+
+        return Response(
+            {
+                "success": True,
+                "message": "Stock transfers retrieved successfully.",
+                "transfers": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def post(self, request):
+        serializer = StockTransferSerializer(
+            data=request.data,
+        )
+
+        if not serializer.is_valid():
+            return Response(
+                {
+                    "success": False,
+                    "message": "Stock transfer validation failed.",
+                    "errors": serializer.errors,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            transfer = create_stock_transfer(
+                product=serializer.validated_data["product"],
+                from_warehouse=serializer.validated_data[
+                    "from_warehouse"
+                ],
+                to_warehouse=serializer.validated_data[
+                    "to_warehouse"
+                ],
+                quantity=serializer.validated_data["quantity"],
+                reference=serializer.validated_data.get(
+                    "reference",
+                    "",
+                ),
+                note=serializer.validated_data.get(
+                    "note",
+                    "",
+                ),
+            )
+
+        except ValidationError as exc:
+            return Response(
+                {
+                    "success": False,
+                    "message": str(exc.detail),
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(
+            {
+                "success": True,
+                "message": "Stock transfer created successfully.",
+                "transfer": StockTransferSerializer(
+                    transfer
+                ).data,
+            },
+            status=status.HTTP_201_CREATED,
         )

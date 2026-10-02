@@ -49,6 +49,13 @@ INSTALLED_APPS = [
     "products",
     "warehouses",
     "inventory",
+    "suppliers",
+    "purchasing",
+    "customers",
+    "sales",
+    "payments",
+    "dashboard",
+    "reports",
     "ai",
 ]
 

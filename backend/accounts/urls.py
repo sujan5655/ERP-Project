@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import LoginAPIView, MeAPIView, RegisterAPIView
+from .views import EmployeeDetailAPIView, EmployeeListCreateAPIView, LoginAPIView, MeAPIView, RegisterAPIView
 
 
 urlpatterns = [
@@ -32,5 +32,18 @@ urlpatterns = [
         MeAPIView.as_view(),
         name="me",
     ),
+
+
+    path(
+    "employees/",
+    EmployeeListCreateAPIView.as_view(),
+    name="employee-list-create",
+),
+
+path(
+    "employees/<int:employee_id>/",
+    EmployeeDetailAPIView.as_view(),
+    name="employee-detail",
+),
 
 ]

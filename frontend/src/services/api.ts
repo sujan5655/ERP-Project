@@ -90,6 +90,11 @@ export const api = createApi({
     "Brand",
     "Product",
     "Inventory",
+    "Supplier",
+    "PurchaseOrder",
+    "Customer",
+    "SalesOrder",
+    "Payment",
   ],
 
   endpoints: () => ({}),

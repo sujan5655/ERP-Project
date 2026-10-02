@@ -5,6 +5,7 @@ from .views import (
     InventoryDetailAPIView,
     StockMovementDetailAPIView,
     StockMovementListCreateAPIView,
+    StockTransferListCreateAPIView,
 )
 
 
@@ -33,5 +34,11 @@ urlpatterns = [
         StockMovementDetailAPIView.as_view(),
         name="stock-movement-detail",
     ),
+
+    path(
+    "transfers/",
+    StockTransferListCreateAPIView.as_view(),
+    name="stock-transfer-list-create",
+),
 
 ]

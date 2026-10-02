@@ -12,6 +12,13 @@ import BrandPage from "../features/brands/BrandPage";
 import ProductPage from "../features/products/productPage";
 import InventoryPage from "../features/inventory/InventoryPage";
 import StockMovementPage from "../features/inventory/StockMovementPage";
+import StockTransferPage from "../features/inventory/StockTransferPage";
+import SupplierPage from "../features/suppliers/supplierPage";
+import PurchasingPage from "../pages/PurchasePage";
+import CustomersPage from "../pages/CustomerPage";
+import SalesPage from "../pages/SalesPage";
+import PaymentsPage from "../pages/PaymentsPage";
+import DashboardPage from "../pages/DashboardPage";
 
 const AppRoutes = () => {
   return (
@@ -23,7 +30,7 @@ const AppRoutes = () => {
           path="/dashboard"
           element={
             <div>
-              <h1>Dashboard</h1>
+              <DashboardPage />
               <LogoutButton />
             </div>
           }
@@ -42,6 +49,17 @@ const AppRoutes = () => {
       <Route path="/inventory" element={<InventoryPage />} />
 
       <Route path="/stock-movements" element={<StockMovementPage />} />
+
+      <Route path="/stock-transfers" element={<StockTransferPage />} />
+
+      <Route path="/suppliers" element={<SupplierPage />} />
+
+      <Route path="/purchasing" element={<PurchasingPage />} />
+
+      <Route path="/customers" element={<CustomersPage />} />
+      <Route path="/sales" element={<SalesPage />} />
+
+      <Route path="/payments" element={<PaymentsPage />} />
     </Routes>
   );
 };

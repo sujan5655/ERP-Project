@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 
-from .serializers import RegisterSerializer
+from .serializers import EmployeeSerializer, RegisterSerializer
 from .models import Account
 from rest_framework.permissions import IsAuthenticated
 
@@ -160,6 +160,179 @@ class MeAPIView(APIView):
                     "last_name": user.last_name,
                     "role": user.role,
                 },
+            },
+            status=status.HTTP_200_OK,
+        )
+
+class EmployeeListCreateAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        employees = Account.objects.select_related(
+            "company",
+            "branch",
+            "warehouse",
+        ).all()
+
+        serializer = EmployeeSerializer(
+            employees,
+            many=True,
+        )
+
+        return Response(
+            {
+                "success": True,
+                "employees": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def post(self, request):
+
+        serializer = EmployeeSerializer(
+            data=request.data
+        )
+
+        if serializer.is_valid():
+
+            employee = serializer.save()
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Employee created successfully.",
+                    "employee": EmployeeSerializer(
+                        employee
+                    ).data,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(
+            {
+                "success": False,
+                "errors": serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+
+class EmployeeDetailAPIView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, employee_id):
+
+        try:
+
+            return Account.objects.select_related(
+                "company",
+                "branch",
+                "warehouse",
+            ).get(
+                id=employee_id
+            )
+
+        except Account.DoesNotExist:
+
+            return None
+
+    def get(self, request, employee_id):
+
+        employee = self.get_object(
+            employee_id
+        )
+
+        if employee is None:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Employee not found.",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = EmployeeSerializer(
+            employee
+        )
+
+        return Response(
+            {
+                "success": True,
+                "employee": serializer.data,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def put(self, request, employee_id):
+
+        employee = self.get_object(
+            employee_id
+        )
+
+        if employee is None:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Employee not found.",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = EmployeeSerializer(
+            employee,
+            data=request.data,
+        )
+
+        if serializer.is_valid():
+
+            employee = serializer.save()
+
+            return Response(
+                {
+                    "success": True,
+                    "message": "Employee updated successfully.",
+                    "employee": EmployeeSerializer(
+                        employee
+                    ).data,
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(
+            {
+                "success": False,
+                "errors": serializer.errors,
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    def delete(self, request, employee_id):
+
+        employee = self.get_object(
+            employee_id
+        )
+
+        if employee is None:
+
+            return Response(
+                {
+                    "success": False,
+                    "message": "Employee not found.",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        employee.delete()
+
+        return Response(
+            {
+                "success": True,
+                "message": "Employee deleted successfully.",
             },
             status=status.HTTP_200_OK,
         )

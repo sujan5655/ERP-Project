@@ -77,3 +77,74 @@ class UserSerializer(serializers.ModelSerializer):
             "role",
         ]
         read_only_fields = fields
+
+
+class EmployeeSerializer(serializers.ModelSerializer):
+
+    password = serializers.CharField(
+        write_only=True,
+        required=False,
+    )
+
+    class Meta:
+        model = Account
+
+        fields = [
+            "id",
+            "email",
+            "first_name",
+            "last_name",
+            "role",
+            "company",
+            "branch",
+            "warehouse",
+            "password",
+            "is_active",
+            "created_at",
+            "updated_at",
+        ]
+
+        read_only_fields = [
+            "id",
+            "created_at",
+            "updated_at",
+        ]
+
+    def create(self, validated_data):
+        password = validated_data.pop(
+            "password",
+            None,
+        )
+
+        employee = Account(
+            **validated_data
+        )
+
+        if password:
+            employee.set_password(password)
+        else:
+            employee.set_unusable_password()
+
+        employee.save()
+
+        return employee
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop(
+            "password",
+            None,
+        )
+
+        for attribute, value in validated_data.items():
+            setattr(
+                instance,
+                attribute,
+                value,
+            )
+
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+
+        return instance

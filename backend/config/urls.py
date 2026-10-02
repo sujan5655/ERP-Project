@@ -21,13 +21,53 @@ urlpatterns = [
     path(
     "api/products/",
     include("products.urls"),
-
-
-    
 ),
 path(
     "api/inventory/",
     include("inventory.urls"),
+
+
+),
+
+    path(
+    "api/suppliers/",
+    include("suppliers.urls"),
+),
+
+path(
+    "api/purchasing/",
+    include("purchasing.urls"),
+
+
+   
+),
+
+ path(
+    "api/customers/",
+    include("customers.urls"),
+),
+
+path(
+    "api/sales/",
+    include("sales.urls"),
+),
+
+
+ path(
+        "api/payments/",
+        include("payments.urls"),
+    ),
+
+
+    path(
+    "api/dashboard/",
+    include("dashboard.urls"),
+),
+
+
+path(
+    "api/reports/",
+    include("reports.urls"),
 ),
 
 ]
