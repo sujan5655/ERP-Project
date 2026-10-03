@@ -95,6 +95,8 @@ export const api = createApi({
     "Customer",
     "SalesOrder",
     "Payment",
+    "Notification",
+    "AuditLog",
   ],
 
   endpoints: () => ({}),

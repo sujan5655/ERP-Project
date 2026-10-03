@@ -19,6 +19,9 @@ import CustomersPage from "../pages/CustomerPage";
 import SalesPage from "../pages/SalesPage";
 import PaymentsPage from "../pages/PaymentsPage";
 import DashboardPage from "../pages/DashboardPage";
+import ReportsPage from "../pages/ReportsPage";
+import AuditLogsPage from "../pages/AuditLogsPage";
+import NotificationsPage from "../pages/NotificationsPage";
 
 const AppRoutes = () => {
   return (
@@ -60,6 +63,10 @@ const AppRoutes = () => {
       <Route path="/sales" element={<SalesPage />} />
 
       <Route path="/payments" element={<PaymentsPage />} />
+      <Route path="/reports" element={<ReportsPage />} />
+      <Route path="/audit-logs" element={<AuditLogsPage />} />
+
+      <Route path="/notifications" element={<NotificationsPage />} />
     </Routes>
   );
 };

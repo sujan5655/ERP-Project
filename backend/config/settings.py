@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     "payments",
     "dashboard",
     "reports",
+    "audit_logs",
+    "notifications",
+    "django_celery_beat",
     "ai",
 ]
 
@@ -163,4 +166,54 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+}
+
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
+
+
+CELERY_BROKER_URL = os.getenv(
+    "REDIS_URL",
+    "redis://localhost:6384/0",
+)
+
+CELERY_RESULT_BACKEND = os.getenv(
+    "REDIS_URL",
+    "redis://localhost:6384/0",
+)
+
+CELERY_ACCEPT_CONTENT = [
+    "json",
+]
+
+CELERY_TASK_SERIALIZER = "json"
+
+CELERY_RESULT_SERIALIZER = "json"
+
+CELERY_TIMEZONE = TIME_ZONE
+
+CELERY_TASK_TRACK_STARTED = True
+
+
+
+CELERY_BEAT_SCHEDULER = (
+    "django_celery_beat.schedulers:DatabaseScheduler"
+)
+
+
+from celery.schedules import crontab
+
+CELERY_BEAT_SCHEDULE = {
+    "create-low-stock-notifications": {
+        "task": (
+            "notifications.tasks."
+            "create_low_stock_notifications"
+        ),
+        "schedule": crontab(minute="*/5"),
+    },
 }
