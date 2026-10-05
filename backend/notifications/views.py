@@ -74,3 +74,27 @@ class NotificationReadAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+
+class TestNotificationAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        notification = Notification.objects.create(
+            user=request.user,
+            notification_type=Notification.NotificationType.SYSTEM,
+            title="Test Notification",
+            message="This is a test notification from the ERP system.",
+        )
+
+        serializer = NotificationSerializer(notification)
+
+        return Response(
+            {
+                "success": True,
+                "message": "Test notification created.",
+                "notification": serializer.data,
+            },
+            status=status.HTTP_201_CREATED,
+        )

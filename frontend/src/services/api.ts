@@ -97,6 +97,7 @@ export const api = createApi({
     "Payment",
     "Notification",
     "AuditLog",
+    "AIConversation",
   ],
 
   endpoints: () => ({}),

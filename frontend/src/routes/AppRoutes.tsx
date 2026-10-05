@@ -22,13 +22,16 @@ import DashboardPage from "../pages/DashboardPage";
 import ReportsPage from "../pages/ReportsPage";
 import AuditLogsPage from "../pages/AuditLogsPage";
 import NotificationsPage from "../pages/NotificationsPage";
-
+import Navbar from "../components/Navbar";
+import AIAssistantPage from "../pages/AIAssistantPage";
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/ai-assistant" element={<AIAssistantPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route element={<ProtectedRoute />}>
+        <Route path="/navbar" element={<Navbar />} />
         <Route
           path="/dashboard"
           element={

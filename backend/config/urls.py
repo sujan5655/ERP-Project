@@ -80,6 +80,7 @@ path(
     include("notifications.urls"),
 ),
 
+path("api/ai/", include("ai_assistant.urls")),
 ]
 urlpatterns += static(
     settings.MEDIA_URL,
